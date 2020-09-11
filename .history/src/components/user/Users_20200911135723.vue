@@ -428,10 +428,6 @@ export default {
       this.$message.success('分配角色成功');
       this.getUserList();
       this.setRoleDialogVisible = false;
-    },
-    //监听分配角色对话框关闭事件
-    setRoleDialogClosed () {
-      this.selectRoleId = '';
     }
   }
 };

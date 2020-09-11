@@ -159,7 +159,6 @@
       title="分配角色"
       :visible.sync="setRoleDialogVisible"
       width="50%"
-      @close="setRoleDialogClosed"
     >
       <div>
         <p>当前的用户： {{ userinfo.username }}</p>
@@ -422,16 +421,7 @@ export default {
           return this.$message.error('请选中分配角色');
         }
       const {data:res} = await this.$http.put(`users/${this.userinfo.id}/role`,{rid:this.selectRoleId});
-      if (res.meta.status !== 200){
-        return this.$message.error('分配角色失败');
-      }
-      this.$message.success('分配角色成功');
-      this.getUserList();
-      this.setRoleDialogVisible = false;
-    },
-    //监听分配角色对话框关闭事件
-    setRoleDialogClosed () {
-      this.selectRoleId = '';
+      console.log(res)
     }
   }
 };

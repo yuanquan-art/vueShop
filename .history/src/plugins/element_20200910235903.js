@@ -27,9 +27,7 @@ import {
      Dialog,
      MessageBox,
      Tag,
-     Tree,
-     Select,
-     Option
+     Tree
     } from 'element-ui'
 
 // 注册为全局组件
@@ -58,8 +56,6 @@ Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Tag)
 Vue.use(Tree)
-Vue.use(Select)
-Vue.use(Option)
 // Message 需要全局挂载，方式不同
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
