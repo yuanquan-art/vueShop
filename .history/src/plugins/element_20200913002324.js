@@ -34,8 +34,7 @@ import {
      Alert,
      Step,
      Steps,
-     Tabs,
-     TabPane
+     Tabs
     } from 'element-ui'
 
 // 注册为全局组件
@@ -71,7 +70,6 @@ Vue.use(Alert)
 Vue.use(Step)
 Vue.use(Steps)
 Vue.use(Tabs)
-Vue.use(TabPane)
 // Message 需要全局挂载，方式不同
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

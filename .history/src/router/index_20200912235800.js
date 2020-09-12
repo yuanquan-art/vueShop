@@ -45,7 +45,7 @@ const routes = [
         path: '/goods',component: List
       },
       {
-        path: '/goods/add',component: Add
+        path: '/goods/add',conponent: Add
       }
     ]
   }
