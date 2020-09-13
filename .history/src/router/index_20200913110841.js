@@ -36,9 +36,7 @@ const routes = [
       {
         path: '/categories',component: Cate
       },
-      {
-        path: '/orders',component: Order
-      }
+      
     ]
   }
   
