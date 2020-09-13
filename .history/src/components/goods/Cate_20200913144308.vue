@@ -90,15 +90,15 @@
             :props="cascaderProps"
             v-model="selectedKeys"
             @change="parentCateChange"
-            clearable
-            change-on-select
-          >
+           clearable change-on-select>
           </el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addCateDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCate">确 定</el-button>
+        <el-button type="primary" @click="addCate"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -187,6 +187,7 @@ export default {
       }
       this.goodslist = res.data.result;
       this.total = res.data.total;
+      console.log(res);
     },
     // 监听当前页码大小改变
     handleSizeChange(newSize) {
@@ -211,6 +212,7 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error("获取父级分类数据失败！");
       }
+      console.log(res)
       this.parentCateList = res.data;
     },
     // 选择项发生变化的时候触发这个函数
@@ -219,43 +221,38 @@ export default {
       // 如果 selectedKeys 数组中的length 大于 0 , 证明选中的父级分类
       // 反之，就说明没有选中任何父级分类
       if (this.selectedKeys.length > 0) {
-        // 父级分类的Id
-        this.addCateForm.cat_pid = this.selectedKeys[
-          this.selectedKeys.length - 1
-        ];
-        // 为当前的分类的等级赋值
-        this.addCateForm.cat_level = this.selectedKeys.length;
-        return;
-      } else {
-        // 父类分类的Id
-        this.addCateForm.cat_pid = 0;
-        // 为当前分类的等级赋值
-        this.addCateForm.cat_level = 0;
+          // 父级分类的Id
+          this.addCateForm.cat_pid = this.selectedKeys[this.selectedKeys.length - 1];
+          // 为当前的分类的等级赋值
+          this.addCateForm.cat_level = this.selectedKeys.length;
+          return ;
+      }else{
+          // 父类分类的Id
+          this.addCateForm.cat_pid = 0;
+          // 为当前分类的等级赋值
+          this.addCateForm.cat_level = 0;
       }
     },
     // 点击按钮，添加新的分类
-    addCate() {
-      this.$refs.addCateFormRef.validate(async valid => {
-        if (!valid) return;
-        const { data: res } = await this.$http.post(
-          "categories",
-          this.addCateForm
-        );
-        console.log(res);
-        if (res.meta.status !== 201) {
-          return this.$message.error("添加分类失败！");
-        }
-        this.$message.success("添加分类成功");
-        this.getGoodsList();
-        this.addCateDialogVisible = false;
-      });
+    addCate(){
+        this.$refs.addCateFormRef.validate(async valid => {
+            if (!valid) return;
+            const {data:res} = await this.$http.post('categories',this.addCateForm);
+            console.log(res)
+            if (res.meta.status !== 201){
+                return this.$message.error('添加分类失败！');
+            }
+            this.$message.success('添加分类成功');
+            this.getGoodsList();
+            this.addCateDialogVisible = false;
+        });
     },
     // 监听添加分类对话框关闭事件
-    addCateDialogClosed() {
-      this.$refs.addCateFormRef.resetFields();
-      this.selectedKeys = [];
-      this.addCateForm.cat_pid = 0;
-      this.addCateForm.cat_level = 0;
+    addCateDialogClosed () {
+       this.$refs.addCateFormRef.resetFields();
+       this.selectedKeys = [];
+       this.addCateForm.cat_pid = 0;
+       this.addCateForm.cat_level = 0;
     }
   }
 };
@@ -266,6 +263,6 @@ export default {
   margin-top: 15px;
 }
 .el-cascader {
-  width: 100%;
+    width: 100%;
 }
 </style>
