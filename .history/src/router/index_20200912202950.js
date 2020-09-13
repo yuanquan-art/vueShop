@@ -7,13 +7,7 @@ import Users from '../components/user/Users.vue'
 import Rights from '../components/power/Rights.vue'
 import Roles from '../components/power/Roles.vue'
 import Cate from '../components/goods/Cate.vue'
-<<<<<<< HEAD
-import Order from '../components/order/Order.vue'
-=======
 import Params from '../components/goods/Params.vue'
-import List from '../components/goods/List.vue'
-import Add from '../components/goods/Add.vue'
->>>>>>> goods_list
 
 Vue.use(VueRouter)
 
@@ -43,17 +37,7 @@ const routes = [
         path: '/categories',component: Cate
       },
       {
-<<<<<<< HEAD
-        path: '/orders',component: Order
-=======
-        path: '/params',component: Params
-      },
-      {
-        path: '/goods',component: List
-      },
-      {
-        path: '/goods/add',component: Add
->>>>>>> goods_list
+        path: '/params',
       }
     ]
   }
