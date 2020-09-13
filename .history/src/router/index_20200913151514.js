@@ -40,6 +40,9 @@ const routes = [
         path: '/categories',component: Cate
       },
       {
+<<<<<<< HEAD
+        path: '/orders',component: Order
+=======
         path: '/params',component: Params
       },
       {
@@ -47,9 +50,7 @@ const routes = [
       },
       {
         path: '/goods/add',component: Add
-      },
-      {
-        path: '/orders',component: Order
+>>>>>>> goods_list
       }
     ]
   }

@@ -40,6 +40,7 @@ const routes = [
         path: '/categories',component: Cate
       },
       {
+        path: '/orders',component: Order
         path: '/params',component: Params
       },
       {
@@ -48,9 +49,7 @@ const routes = [
       {
         path: '/goods/add',component: Add
       },
-      {
-        path: '/orders',component: Order
-      }
+    
     ]
   }
   

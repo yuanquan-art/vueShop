@@ -44,7 +44,7 @@
           <el-tag v-else type="warning">三级</el-tag>
         </template>
         <!-- 操作 -->
-        <template slot="opt">
+        <template slot="opt" slot-scope="scope">
           <el-button size="mini" type="primary" class="el-icon-edit"
             >编辑</el-button
           >
@@ -211,6 +211,7 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error("获取父级分类数据失败！");
       }
+      console.log(res);
       this.parentCateList = res.data;
     },
     // 选择项发生变化的时候触发这个函数
