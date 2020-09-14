@@ -53,7 +53,7 @@ const routes = [
         path: '/orders',component: Order
       },
       {
-        path: '/reports',component: Report
+        path: ''
       }
     ]
   }
