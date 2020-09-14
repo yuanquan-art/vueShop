@@ -49,32 +49,7 @@
           <!-- Table表格区域  -->
           <el-table :data="manyTableData" border stripe>
             <!-- 展开行 -->
-            <el-table-column type="expand">
-              <template slot-scope="scope">
-                <!-- Tag标签 -->
-                <el-tag
-                  v-for="(item,i) in scope.row.attr_vals"
-                  :key="item.id"
-                  closable
-                  @close = "handleClose(i,scope.row)"
-                >
-                  {{ item }}</el-tag
-                >
-                <!-- 文本输入框 -->
-                <el-input
-                  class="input-new-tag"
-                  v-if="scope.row.inputVisible"
-                  v-model="scope.row.inputValue"
-                  ref="saveTagInput"
-                  size="small"
-                  @keyup.enter.native="handleInputConfirm(scope.row)"
-                  @blur="handleInputConfirm(scope.row)"
-                >
-                </el-input>
-                <!-- button按钮 -->
-                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
-              </template>
-            </el-table-column>
+            <el-table-column type="expand"></el-table-column>
             <!-- 索引列 -->
             <el-table-column type="index"></el-table-column>
             <el-table-column
@@ -116,13 +91,9 @@
           <el-table :data="onlyTableData" border stripe>
             <!-- 展开行 -->
             <el-table-column type="expand">
-              <template slot-scope="scope">
-                <el-tag
-                  v-for="item in scope.row.attr_vals"
-                  :key="item.id"
-                  closable
-                >
-                  {{ item }}
+              <template>
+                <el-tag v-for="() in ">
+                  {{  }}
                 </el-tag>
               </template>
             </el-table-column>
@@ -171,12 +142,14 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addParams">确 定</el-button>
+        <el-button type="primary" @click="addParams"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 编辑动态参数对话框 -->
     <el-dialog
-      :title="'修改' + titleText"
+      :title="'修改'+titleText"
       :visible.sync="showEditDialogVisible"
       width="50%"
       @close="addDialogClosed"
@@ -193,7 +166,9 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showEditDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editParams">确 定</el-button>
+        <el-button type="primary" @click="editParams"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -227,28 +202,21 @@ export default {
       addFormRules: {
         attr_name: [
           {
-            required: true,
-            message: `请输入要添加的参数`,
-            trigger: "blur"
+            required: true, message: `请输入要添加的参数`, trigger: 'blur'
           }
         ]
       },
-      // 控制编辑对话框的显示
-      showEditDialogVisible: false,
-      // 编辑的表单数据对象
-      editForm: {
-        attr_name: ""
-      },
-      //编辑表单的验证规则
-      editFormRules: {
-        attr_name: [
-          { required: true, message: "请编辑动态参数", trigger: "blur" }
-        ]
-      },
-      // 控制表单与按钮的切换
-      inputVisible: false,
-      // 文本输入框的属性
-      inputValue: ''
+    // 控制编辑对话框的显示
+    showEditDialogVisible: false,
+    // 编辑的表单数据对象
+    editForm: {
+      attr_name: ''
+    },
+    editFormRules: {
+      attr_name: [
+         { required: true, message: '请编辑动态参数', trigger: 'blur' }
+      ]
+    }
     };
   },
   created() {
@@ -276,8 +244,6 @@ export default {
       // 证明选中的不是三级分类
       if (this.selectedCateKeys.length !== 3) {
         this.selectedCateKeys = [];
-        this.manyTableData = [];
-        this.onlyTableData = [];
       }
       // 证明选中的是三级分类
       console.log(this.selectedCateKeys);
@@ -294,13 +260,10 @@ export default {
         return this.$message.error("获取参数列表失败");
       }
 
-      res.data.forEach(item => {
-        item.attr_vals = item.attr_vals ? item.attr_vals.split(" ") : [];
-        // 控制输入框的显示与隐藏
-        item.inputVisible = false;
-        // 输入的文本框
-        item.inputValue = '';
-      });
+       res.data.forEach(item => {
+         item.attr_vals = item.attr_vals.split(' ');
+       });
+       console.log(res.data)
 
       if (this.activeName === "many") {
         this.manyTableData = res.data;
@@ -309,121 +272,74 @@ export default {
       }
     },
     // 监听对话框的关闭事件
-    addDialogClosed() {
-      this.$refs.addFormRef.resetFields();
+    addDialogClosed(){
+       this.$refs.addFormRef.resetFields();
     },
     // 添加动态参数或静态属性
     addParams() {
-      this.$refs.addFormRef.validate(async valid => {
-        // 表单预验证
-        if (!valid) {
-          return;
-        }
-        // 发起添加请求
-        const { data: res } = await this.$http.post(
-          `categories/${this.cateId}/attributes`,
-          {
+      this.$refs.addFormRef.validate(
+       async valid => {
+          // 表单预验证
+          if (!valid){
+            return ;
+          }
+          // 发起添加请求
+        const {data:res} = await this.$http.post(`categories/${this.cateId}/attributes`,{
             attr_name: this.addForm.attr_name,
             attr_sel: this.activeName
+          });
+          if (res.meta.status !== 201){
+            return this.$message.error('添加参数失败');
           }
-        );
-        if (res.meta.status !== 201) {
-          return this.$message.error("添加参数失败");
+          this.addDialogVisible =false;
+          this.getParamsData();
+          console.log(res)
         }
-        this.addDialogVisible = false;
-        this.getParamsData();
-        console.log(res);
-      });
+      )
     },
     // 控制弹出编辑对话框
-    async showEditDialog(attr_id) {
-      const { data: res } = await this.$http.get(
-        `categories/${this.cateId}/attributes/${attr_id}`
-      );
-      if (res.meta.status !== 200) {
-        return;
+    async showEditDialog(attr_id){
+      const {data:res} = await this.$http.get(`categories/${this.cateId}/attributes/${attr_id}`);
+      if(res.meta.status !== 200){
+        return ;
       }
 
       this.editForm = res.data;
       this.showEditDialogVisible = true;
     },
     // 重置修改的表单
-    addDialogClosed() {
+    addDialogClosed(){
       this.$refs.editFormRef.resetFields();
     },
     // 点击确定按钮，发送编辑请求
-    editParams() {
-      this.$refs.editFormRef.validate(async valid => {
-        //表单预验证
-        if (!valid) return;
-        //验证通过，发起编辑请求
-        const { data: res } = await this.$http.put(
-          `categories/${this.cateId}/attributes/${this.editForm.attr_id}`,
-          {
+    editParams(){
+      this.$refs.editFormRef.validate(
+       async valid => {
+          //表单预验证
+          if (!valid) return;
+          //验证通过，发起编辑请求
+         const {data:res} = await this.$http.put(`categories/${this.cateId}/attributes/${this.editForm.attr_id}`,{
             attr_name: this.editForm.attr_name,
             attr_sel: this.activeName
+          });
+          if (res.meta.status !== 200){
+            return this.$message.error(res.meta.msg);
           }
-        );
-        if (res.meta.status !== 200) {
-          return this.$message.error(res.meta.msg);
+          this.$message.success('更新成功！');
+          this.showEditDialogVisible = false;
+          this.getParamsData();
         }
-        this.$message.success("更新成功！");
-        this.showEditDialogVisible = false;
-        this.getParamsData();
-      });
+      );
     },
     // 根据参数id删除对应的参数
-    async deleteParams(attr_id) {
-      const { data: res } = await this.$http.delete(
-        `categories/${this.cateId}/attributes/${attr_id}`
-      );
-      if (res.meta.status !== 200) {
-        return this.$message.error(res.meta.msg);
-      }
-      this.$message.success(res.meta.msg);
-      this.getParamsData();
-    },
-    // 点击按钮，控制切换
-    showInput(row) {
-      row.inputVisible = true;
-      // 让文本框自动获得焦点
-      // $nextTick 方法的作用，就是当页面上元素被重新渲染之后，才会指定回调函数中的代码
-      this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-    },
-    // 按钮失去焦点时，触发
-    async handleInputConfirm(row) {
-       // 优化
-       if (row.inputValue.trim().length === 0){
-         row.inputValue = '';
-         row.inputVisible = false;
-         return;
-       }
-       // 如果没有return,则证明输入的内容，需要做一些后续的处理
-       row.attr_vals.push(row.inputValue.trim());
-       row.inputValue = '';
-       row.inputVisible = false
-       // 需要发起请求，保存这次参数
-        this.saveAttr(row);
-     },
-     // 保存参数到数据库中
-     async saveAttr(row){
-        const {data:res} =await  this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,{
-         attr_name: row.attr_name,
-         attr_sel: row.attr_sel,
-         attr_vals: row.attr_vals.join(' ')
-       });
-       if (res.meta.status !== 200){
-         return this.$message.error(res.meta.msg);
-       }
-       this.$message.success(res.meta.msg);
-     },
-     //删除对应的参数
-     handleClose (i,row){
-       row.attr_vals.splice(i,1);
-       this.saveAttr(row);
+    async deleteParams(attr_id){
+     const {data:res} = await this.$http.delete(`categories/${this.cateId}/attributes/${attr_id}`);
+     if (res.meta.status !== 200){
+       return this.$message.error(res.meta.msg);
      }
+     this.$message.success(res.meta.msg);
+     this.getParamsData();
+    }
   },
   // 计算属性
   computed: {
@@ -455,11 +371,5 @@ export default {
 <style lang="less" scoped>
 .cat_opt {
   margin: 15px 0;
-}
-.el-tag {
-  margin: 15px;
-}
-.input-new-tag {
-  width: 120px;
 }
 </style>

@@ -276,8 +276,6 @@ export default {
       // 证明选中的不是三级分类
       if (this.selectedCateKeys.length !== 3) {
         this.selectedCateKeys = [];
-        this.manyTableData = [];
-        this.onlyTableData = [];
       }
       // 证明选中的是三级分类
       console.log(this.selectedCateKeys);
@@ -405,10 +403,9 @@ export default {
        row.inputValue = '';
        row.inputVisible = false
        // 需要发起请求，保存这次参数
-        this.saveAttr(row);
+    
      },
-     // 保存参数到数据库中
-     async saveAttr(row){
+     saveAttr(){
         const {data:res} =await  this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,{
          attr_name: row.attr_name,
          attr_sel: row.attr_sel,
@@ -421,8 +418,7 @@ export default {
      },
      //删除对应的参数
      handleClose (i,row){
-       row.attr_vals.splice(i,1);
-       this.saveAttr(row);
+       
      }
   },
   // 计算属性

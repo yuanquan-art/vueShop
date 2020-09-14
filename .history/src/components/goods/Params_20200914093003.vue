@@ -53,26 +53,25 @@
               <template slot-scope="scope">
                 <!-- Tag标签 -->
                 <el-tag
-                  v-for="(item,i) in scope.row.attr_vals"
+                  v-for="item in scope.row.attr_vals"
                   :key="item.id"
                   closable
-                  @close = "handleClose(i,scope.row)"
                 >
                   {{ item }}</el-tag
                 >
                 <!-- 文本输入框 -->
                 <el-input
                   class="input-new-tag"
-                  v-if="scope.row.inputVisible"
-                  v-model="scope.row.inputValue"
+                  v-if="inputVisible"
+                  v-model="inputValue"
                   ref="saveTagInput"
                   size="small"
-                  @keyup.enter.native="handleInputConfirm(scope.row)"
-                  @blur="handleInputConfirm(scope.row)"
+                  @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm"
                 >
                 </el-input>
                 <!-- button按钮 -->
-                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
               </template>
             </el-table-column>
             <!-- 索引列 -->
@@ -276,8 +275,6 @@ export default {
       // 证明选中的不是三级分类
       if (this.selectedCateKeys.length !== 3) {
         this.selectedCateKeys = [];
-        this.manyTableData = [];
-        this.onlyTableData = [];
       }
       // 证明选中的是三级分类
       console.log(this.selectedCateKeys);
@@ -296,10 +293,7 @@ export default {
 
       res.data.forEach(item => {
         item.attr_vals = item.attr_vals ? item.attr_vals.split(" ") : [];
-        // 控制输入框的显示与隐藏
-        item.inputVisible = false;
-        // 输入的文本框
-        item.inputValue = '';
+        item.
       });
 
       if (this.activeName === "many") {
@@ -384,46 +378,11 @@ export default {
       this.getParamsData();
     },
     // 点击按钮，控制切换
-    showInput(row) {
-      row.inputVisible = true;
-      // 让文本框自动获得焦点
-      // $nextTick 方法的作用，就是当页面上元素被重新渲染之后，才会指定回调函数中的代码
-      this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
+    showInput() {
+      this.inputVisible = true;
     },
     // 按钮失去焦点时，触发
-    async handleInputConfirm(row) {
-       // 优化
-       if (row.inputValue.trim().length === 0){
-         row.inputValue = '';
-         row.inputVisible = false;
-         return;
-       }
-       // 如果没有return,则证明输入的内容，需要做一些后续的处理
-       row.attr_vals.push(row.inputValue.trim());
-       row.inputValue = '';
-       row.inputVisible = false
-       // 需要发起请求，保存这次参数
-        this.saveAttr(row);
-     },
-     // 保存参数到数据库中
-     async saveAttr(row){
-        const {data:res} =await  this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,{
-         attr_name: row.attr_name,
-         attr_sel: row.attr_sel,
-         attr_vals: row.attr_vals.join(' ')
-       });
-       if (res.meta.status !== 200){
-         return this.$message.error(res.meta.msg);
-       }
-       this.$message.success(res.meta.msg);
-     },
-     //删除对应的参数
-     handleClose (i,row){
-       row.attr_vals.splice(i,1);
-       this.saveAttr(row);
-     }
+     handleInputConfirm() {}
   },
   // 计算属性
   computed: {

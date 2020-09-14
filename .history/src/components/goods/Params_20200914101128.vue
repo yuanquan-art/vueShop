@@ -53,10 +53,9 @@
               <template slot-scope="scope">
                 <!-- Tag标签 -->
                 <el-tag
-                  v-for="(item,i) in scope.row.attr_vals"
+                  v-for="item in scope.row.attr_vals"
                   :key="item.id"
                   closable
-                  @close = "handleClose(i,scope.row)"
                 >
                   {{ item }}</el-tag
                 >
@@ -276,8 +275,6 @@ export default {
       // 证明选中的不是三级分类
       if (this.selectedCateKeys.length !== 3) {
         this.selectedCateKeys = [];
-        this.manyTableData = [];
-        this.onlyTableData = [];
       }
       // 证明选中的是三级分类
       console.log(this.selectedCateKeys);
@@ -405,11 +402,7 @@ export default {
        row.inputValue = '';
        row.inputVisible = false
        // 需要发起请求，保存这次参数
-        this.saveAttr(row);
-     },
-     // 保存参数到数据库中
-     async saveAttr(row){
-        const {data:res} =await  this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,{
+     const {data:res} =await  this.$http.put(`categories/${this.cateId}/attributes/${row.attr_id}`,{
          attr_name: row.attr_name,
          attr_sel: row.attr_sel,
          attr_vals: row.attr_vals.join(' ')
@@ -417,12 +410,8 @@ export default {
        if (res.meta.status !== 200){
          return this.$message.error(res.meta.msg);
        }
-       this.$message.success(res.meta.msg);
-     },
-     //删除对应的参数
-     handleClose (i,row){
-       row.attr_vals.splice(i,1);
-       this.saveAttr(row);
+       this.$message.success(this.meta.msg);
+       console.log(res)
      }
   },
   // 计算属性
