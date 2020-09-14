@@ -29,8 +29,7 @@ Vue.config.productionTip = false
 
 Vue.component('tree-table',TreeTable)
 
-// 将富文本编辑器注册为全局组件
-Vue.use(VueQuillEditor)
+Vue.use()
 
 Vue.filter('dataFormat',function (originValue) {
    var dt = new Date(originValue);

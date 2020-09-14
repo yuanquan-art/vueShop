@@ -135,8 +135,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
-
 export default {
   data() {
     return {
@@ -151,8 +149,7 @@ export default {
         goods_cat: [],
         pics: [],
         // 商品详情介绍
-        goods_introduce: '',
-        attrs: []
+        goods_introduce: ''
       },
       addFormRules: {
         goods_name: [
@@ -299,42 +296,7 @@ export default {
       this.addForm.pics.push(picInfo);
     },
     // 点击添加按钮，添加商品
-    add(){
-      this.$refs.addFormRef.validate(async valid => {
-        if(!valid) {
-          return this.$message.error('请填写必要的表单项');
-        }
-        // 处理添加表单的逻辑
-        // lodash cloneDeep(obj)
-        const form = _.cloneDeep(this.addForm);
-        form.goods_cat = form.goods_cat.join(",");
-        // 处理动态参数
-         this.manyParamsList.forEach(item => {
-           const newInfo = {
-             attr_id: item.attr_id,
-             attr_value: item.attr_vals.join(' ')
-           }
-           this.addForm.attrs.push(newInfo);
-         })
-        // 处理静态属性
-        this.onlyAttrList.forEach(item => {
-           const newInfo = {
-             attr_id: item.attr_id,
-             attr_value: item.attr_vals
-           }
-           this.addForm.attrs.push(newInfo);
-         })
-         form.attrs = this.addForm.attrs;
-         // 发起请求添加商品
-         // 商品的名称，必须是唯一的
-        const {data:res} = await this.$http.post('goods',form);
-        if (res.meta.status !== 201){
-          return this.$message.error('添加商品失败！');
-        }
-        this.$message.success('添加商品成功！');
-        this.$router.push('/goods')
-      });
-    }
+    add(){}
   },
   // 计算属性
   computed: {

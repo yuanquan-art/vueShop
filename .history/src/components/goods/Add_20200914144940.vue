@@ -116,9 +116,7 @@
           </el-tab-pane>
           <el-tab-pane label="商品内容" name="4">
             <!-- 富文本编辑器组件 -->
-            <quill-editor v-model="addForm.goods_introduce"></quill-editor>
-            <!-- 添加商品按钮 -->
-            <el-button type="primary" class="addBtn" @click="add">添加按钮</el-button>
+            <quill-editor v-model="addForm."></quill-editor>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -135,8 +133,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
-
 export default {
   data() {
     return {
@@ -149,10 +145,7 @@ export default {
         goods_number: 0,
         //商品所属的分类数组
         goods_cat: [],
-        pics: [],
-        // 商品详情介绍
-        goods_introduce: '',
-        attrs: []
+        pics: []
       },
       addFormRules: {
         goods_name: [
@@ -297,43 +290,6 @@ export default {
       };
       // 2.将图片信息对象，push到pics数组中
       this.addForm.pics.push(picInfo);
-    },
-    // 点击添加按钮，添加商品
-    add(){
-      this.$refs.addFormRef.validate(async valid => {
-        if(!valid) {
-          return this.$message.error('请填写必要的表单项');
-        }
-        // 处理添加表单的逻辑
-        // lodash cloneDeep(obj)
-        const form = _.cloneDeep(this.addForm);
-        form.goods_cat = form.goods_cat.join(",");
-        // 处理动态参数
-         this.manyParamsList.forEach(item => {
-           const newInfo = {
-             attr_id: item.attr_id,
-             attr_value: item.attr_vals.join(' ')
-           }
-           this.addForm.attrs.push(newInfo);
-         })
-        // 处理静态属性
-        this.onlyAttrList.forEach(item => {
-           const newInfo = {
-             attr_id: item.attr_id,
-             attr_value: item.attr_vals
-           }
-           this.addForm.attrs.push(newInfo);
-         })
-         form.attrs = this.addForm.attrs;
-         // 发起请求添加商品
-         // 商品的名称，必须是唯一的
-        const {data:res} = await this.$http.post('goods',form);
-        if (res.meta.status !== 201){
-          return this.$message.error('添加商品失败！');
-        }
-        this.$message.success('添加商品成功！');
-        this.$router.push('/goods')
-      });
     }
   },
   // 计算属性
@@ -354,8 +310,5 @@ export default {
 }
 .previewImg {
   width: 100%;
-}
-.addBtn {
-  margin: 15px;
 }
 </style>
