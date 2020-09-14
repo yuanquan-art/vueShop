@@ -36,7 +36,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template slot-scope="scope">
+          <template>
             <el-button
               type="primary"
               size="mini"
@@ -47,7 +47,6 @@
               type="success"
               size="mini"
               class="el-icon-location"
-              @click="showProgressBox(scope.row.order_id)"
             ></el-button>
           </template>
         </el-table-column>
@@ -69,7 +68,6 @@
       title="修改地址"
       :visible.sync="editAddressDialogVisible"
       width="50%"
-      @close="editAddressDialogClosed"
     >
       <!-- 表单区域 -->
       <el-form
@@ -78,14 +76,8 @@
         ref="editAddressFormRef"
         label-width="100px"
       >
-        <el-form-item label="省/市区" prop="address1">
-          <el-cascader
-            :options="cityData"
-            v-model="editAddressForm.address1"
-          ></el-cascader>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="address2">
-          <el-input v-model="editAddressForm.address2"></el-input>
+        <el-form-item label="省/市区" prop="address">
+          <el-input v-model="editAddressForm.address"></el-input>
         </el-form-item>
       </el-form>
       <!-- 底部区域 -->
@@ -96,24 +88,10 @@
         >
       </span>
     </el-dialog>
-    <!-- 展示物流进度的对话框 -->
-    <el-dialog title="物流进度" :visible.sync="progressVisible" width="50%">
-      <!-- 时间线 -->
-      <el-timeline>
-        <el-timeline-item
-          v-for="(activity, index) in progressInfo"
-          :key="index"
-          :timestamp="activity.time"
-        >
-          {{ activity.context }}
-        </el-timeline-item>
-      </el-timeline>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import cityData from "./citydata.js";
 export default {
   data() {
     return {
@@ -130,23 +108,8 @@ export default {
       // 修改地址对话框的显示与隐藏
       editAddressDialogVisible: false,
       // 修改地址表单对象
-      editAddressForm: {
-        address1: [],
-        address2: ""
-      },
-      // 修改地址表单验证规则对象
-      editAddressFormRules: {
-        address1: [
-          { required: true, message: "请输入选择地址", trigger: "blur" }
-        ],
-        address2: [
-          { required: true, message: "请输入选择地址", trigger: "blur" }
-        ]
-      },
-      cityData,
-      progressVisible: false,
-      // 物流信息
-      progressInfo: []
+      editAddressForm: {},
+      
     };
   },
   created() {
@@ -170,24 +133,9 @@ export default {
     },
     handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage;
-    },
-    editAddressDialogClosed() {
-      this.$refs.editAddressFormRef.resetFields();
-    },
-    async showProgressBox(id) {
-      const { data: res } = await this.$http.get(`/kuaidi/1106975712662`);
-      if (res.meta.status !== 200) {
-        return this.$message.error("获取路由失败");
-      }
-      this.progressInfo = res.data;
-      this.progressVisible = true;
     }
   }
 };
 </script>
 
-<style lang="less" scoped>
-.el-cascader {
-  width: 100%;
-}
-</style>
+<style lang="less" scoped></style>

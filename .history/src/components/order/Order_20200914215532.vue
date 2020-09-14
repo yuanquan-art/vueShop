@@ -101,11 +101,11 @@
       <!-- 时间线 -->
       <el-timeline>
         <el-timeline-item
-          v-for="(activity, index) in progressInfo"
+          v-for="(activity, index) in activities"
           :key="index"
-          :timestamp="activity.time"
+          :timestamp="activity.timestamp"
         >
-          {{ activity.context }}
+          {{ activity.content }}
         </el-timeline-item>
       </el-timeline>
     </el-dialog>

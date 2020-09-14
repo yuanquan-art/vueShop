@@ -36,7 +36,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template slot-scope="scope">
+          <template>
             <el-button
               type="primary"
               size="mini"
@@ -47,7 +47,7 @@
               type="success"
               size="mini"
               class="el-icon-location"
-              @click="showProgressBox(scope.row.order_id)"
+              @click="showProgressBox"
             ></el-button>
           </template>
         </el-table-column>
@@ -97,17 +97,19 @@
       </span>
     </el-dialog>
     <!-- 展示物流进度的对话框 -->
-    <el-dialog title="物流进度" :visible.sync="progressVisible" width="50%">
-      <!-- 时间线 -->
-      <el-timeline>
-        <el-timeline-item
-          v-for="(activity, index) in progressInfo"
-          :key="index"
-          :timestamp="activity.time"
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
         >
-          {{ activity.context }}
-        </el-timeline-item>
-      </el-timeline>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -143,10 +145,7 @@ export default {
           { required: true, message: "请输入选择地址", trigger: "blur" }
         ]
       },
-      cityData,
-      progressVisible: false,
-      // 物流信息
-      progressInfo: []
+      cityData
     };
   },
   created() {
@@ -174,14 +173,7 @@ export default {
     editAddressDialogClosed() {
       this.$refs.editAddressFormRef.resetFields();
     },
-    async showProgressBox(id) {
-      const { data: res } = await this.$http.get(`/kuaidi/1106975712662`);
-      if (res.meta.status !== 200) {
-        return this.$message.error("获取路由失败");
-      }
-      this.progressInfo = res.data;
-      this.progressVisible = true;
-    }
+    showProgressBox() {}
   }
 };
 </script>
